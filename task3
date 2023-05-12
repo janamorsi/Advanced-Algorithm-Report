@@ -1,12 +1,10 @@
 public interface TwoColorDoubleStackADT<T> {
-    // Operations for red stack
     void red_push(V item);
     V red_pop();
     V red_peek();
     boolean red_empty();
     boolean red_full();
     
-    // Operations for blue stack
     void blue_push(V item);
     V blue_pop();
     V blue_peek();
@@ -28,7 +26,6 @@ public class ArrayTwoColorDoubleStack<V> implements TwoColorDoubleStackADT<V> {
         blue_top = capacity;
     }
     
-    // Operations for red stack
     public void red_push(V item) {
         if (red_top + 1 >= blue_top) {
             throw new IllegalStateException("Stack overflow");
@@ -62,7 +59,6 @@ public class ArrayTwoColorDoubleStack<V> implements TwoColorDoubleStackADT<V> {
         return red_top + 1 >= blue_top;
     }
     
-    // Operations for blue stack
     public void blue_push(V item) {
         if (blue_top - 1 <= redTop) {
             throw new IllegalStateException("Stack overflow");
