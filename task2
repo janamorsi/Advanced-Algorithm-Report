@@ -1,0 +1,41 @@
+import java.util.Arrays;
+public class task2 {
+    public static boolean same_num(int[] array1, int[] array2) {
+        if (array1.length != array2.length) {
+            return false;
+        }
+        bubbleSort(array1);
+        bubbleSort(array2);
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static void bubbleSort(int[] arr) {
+        int x = arr.length;
+        for (int i = 0; i < x - 1; i++) {
+            for (int m = 0; m < x - i - 1; m++) {
+                if (arr[m] > arr[m+1]) {
+                    int temp = arr[m];
+                    arr[m] = arr[m+1];
+                    arr[m+1] = temp;
+                }
+            }
+        }
+    }
+    public static void main(String[] args) {
+        int[] array1 = {5, 2, 7, 3, 9};
+        int[] array2 = {7, 9, 3, 5, 2};
+        boolean result = same_num(array1, array2);
+        System.out.println(result); 
+    }
+}
+
+
+
+
+
+
+
