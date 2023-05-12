@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class ShortestPathRouting {
+
+    public static Map<Character, Map<Character, Character>> buildRoutingTables(List<String> connectivityInfo) {
+        Map<Character, Map<Character, Character>> routingTables = new HashMap<>();
+
+        Map<Character, Set<Character>> adjacencyList = new HashMap<>();
+        for (String connection : connectivityInfo) {
+            char source = connection.charAt(5);
+            char destination = connection.charAt(8);
+            adjacencyList.computeIfAbsent(source, k -> new HashSet<>()).add(destination);
+            adjacencyList.computeIfAbsent(destination, k -> new HashSet<>()).add(source);
+        }
+
+        for (char source : adjacencyList.keySet()) {
+            Map<Character, Character> routingTable = new HashMap<>();
+            Queue<Character> queue = new LinkedList<>();
+            Map<Character, Boolean> visited = new HashMap<>();
+            Map<Character, Integer> distances = new HashMap<>();
+            Map<Character, Character> parents = new HashMap<>();
+            for (char node : adjacencyList.keySet()) {
+                visited.put(node, false);
+                distances.put(node, Integer.MAX_VALUE);
+                parents.put(node, null);
+            }
+            visited.put(source, true);
+            distances.put(source, 0);
+            queue.offer(source);
+            while (!queue.isEmpty()) {
+                char node = queue.poll();
+                for (char neighbor : adjacencyList.get(node)) {
+                    if (!visited.get(neighbor)) {
+                        visited.put(neighbor, true);
+                        distances.put(neighbor, distances.get(node) + 1);
+                        parents.put(neighbor, node);
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+
+            for (char destination : adjacencyList.keySet()) {
+                if (destination != source) {
+                    char nextHop = destination;
+                    while (parents.get(nextHop) != source) {
+                        nextHop = parents.get(nextHop);
+                    }
+                    routingTable.put(destination, nextHop);
+                }
+            }
+            routingTables.put(source, routingTable);
+        }
+
+        return routingTables;
+    }
+
+    public static void main(String[] args) {
+        List<String> connectivityInfo = new ArrayList<>();
+        connectivityInfo.add("Node A: B");
+        connectivityInfo.add("Node A: C");
+        connectivityInfo.add("Node A: D");
+
+        Map<Character, Map<Character, Character>> routingTables = buildRoutingTables(connectivityInfo);
+
+        for (char node : routingTables.keySet()) {
+            System.out.println(" Routing table for node " + node + ":");
+            for (char destination : routingTables.get(node).keySet()) {
+                System.out.println(destination + " -> " + routingTables.get(node).get(destination));
+            }
+            System.out.println();
+        }
+    }
+}
