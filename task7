@@ -1,0 +1,82 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class heap_sorting {
+
+    public static LinkedList<Integer> heapSort(LinkedList<Integer> inputList) {
+        buildMinHeap(inputList);
+
+        LinkedList<Integer> sortedList = new LinkedList<>();
+
+        while (!inputList.isEmpty()) {
+            sortedList.add(extractMin(inputList));
+        }
+
+        return sortedList;
+    }
+
+    private static void buildMinHeap(LinkedList<Integer> inputList) {
+        int listSize = inputList.size();
+
+        for (int i = listSize / 2 - 1; i >= 0; i--) {
+            heapify(inputList, listSize, i);
+        }
+    }
+
+    private static int extractMin(LinkedList<Integer> inputList) {
+        int listSize = inputList.size();
+        if (listSize == 0) {
+            throw new IllegalStateException("Heap is empty");
+        }
+
+        int min = inputList.get(0);
+
+        int lastElement = inputList.remove(listSize - 1);
+        if (listSize > 1) {
+            inputList.set(0, lastElement);
+            heapify(inputList, listSize - 1, 0);
+        }
+
+        return min;
+    }
+
+    private static void heapify(LinkedList<Integer> inputList, int listSize, int currentIndex) {
+        int smallestIndex = currentIndex;
+        int leftChildIndex = 2 * currentIndex + 1;
+        int rightChildIndex = 2 * currentIndex + 2;
+
+        if (leftChildIndex < listSize && inputList.get(leftChildIndex) < inputList.get(smallestIndex)) {
+            smallestIndex = leftChildIndex;
+        }
+
+        if (rightChildIndex < listSize && inputList.get(rightChildIndex) < inputList.get(smallestIndex)) {
+            smallestIndex = rightChildIndex;
+        }
+
+        if (smallestIndex != currentIndex) {
+            int temp = inputList.get(currentIndex);
+            inputList.set(currentIndex, inputList.get(smallestIndex));
+            inputList.set(smallestIndex, temp);
+
+            heapify(inputList, listSize, smallestIndex);
+        }
+    }
+
+    public static void main(String[] args) {
+        LinkedList<Integer> inputList = new LinkedList<>();
+        inputList.add(5);
+        inputList.add(2);
+        inputList.add(8);
+        inputList.add(3);
+        inputList.add(6);
+        inputList.add(4);
+        inputList.add(1);
+        inputList.add(7);
+
+        System.out.println("This is the unsorted list: " + inputList);
+
+        LinkedList<Integer> sortedList = heapSort(inputList);
+
+        System.out.println("This is the lis after its sorted: " + sortedList);
+    }
+}
