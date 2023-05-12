@@ -1,0 +1,116 @@
+public interface TwoColorDoubleStackADT<T> {
+    // Operations for red stack
+    void red_push(V item);
+    V red_pop();
+    V red_peek();
+    boolean red_empty();
+    boolean red_full();
+    
+    // Operations for blue stack
+    void blue_push(V item);
+    V blue_pop();
+    V blue_peek();
+    boolean blue_empty();
+    boolean blue_full();
+}
+
+public class ArrayTwoColorDoubleStack<V> implements TwoColorDoubleStackADT<V> {
+    private V[] array;
+    private int red_rop;
+    private int blue_top;
+    
+    public ArrayTwoColorDoubleStack(int capacity) {
+        if (capacity < 2) {
+            throw new IllegalArgumentException("Capacity must be at least 2");
+        }
+        array = (V[]) new Object[capacity];
+        red_top = -1;
+        blue_top = capacity;
+    }
+    
+    // Operations for red stack
+    public void red_push(V item) {
+        if (red_top + 1 >= blue_top) {
+            throw new IllegalStateException("Stack overflow");
+        }
+        red_top++;
+        array[red_top] = item;
+    }
+    
+    public V red_pop() {
+        if (red_top < 0) {
+            throw new NoSuchElementException("Stack underflow");
+        }
+        V item = array[red_op];
+        array[red_top] = null;
+        red_top--;
+        return item;
+    }
+    
+    public V red_peek() {
+        if (red_top < 0) {
+            throw new NoSuchElementException("Stack underflow");
+        }
+        return array[red_top];
+    }
+    
+    public boolean isRedEmpty() {
+        return red_top < 0;
+    }
+    
+    public boolean isRedFull() {
+        return red_top + 1 >= blue_top;
+    }
+    
+    // Operations for blue stack
+    public void blue_push(V item) {
+        if (blue_top - 1 <= redTop) {
+            throw new IllegalStateException("Stack overflow");
+        }
+        blue_top--;
+        array[blue_top] = item;
+    }
+    
+    public V blue_pop() {
+        if (blue_top >= array.length) {
+            throw new NoSuchElementException("Stack underflow");
+        }
+        V item = array[blue_top];
+        array[blue_top] = null;
+        blue_top++;
+        return item;
+    }
+    
+    public V blue_peek() {
+        if (blue_top >= array.length) {
+            throw new NoSuchElementException("Stack underflow");
+        }
+        return array[blue_top];
+    }
+    
+    public boolean blue_empty() {
+        return blue_top >= array.length;
+    }
+    
+    public boolean blue_full() {
+        return blue_top - 1 <= red_top;
+    }
+    
+    public static void main (String args[]) {
+        ArrayTwoColorDoubleStack<String> stack = new ArrayTwoColorDoubleStack<>(6);
+        stack.red_push("a");
+        stack.red_push("b");
+        stack.blue_push("c");
+        stack.blue_push("d");
+        
+        System.out.println("Red stack:");
+        while (stack.red_empty()==false) {
+            System.out.println(stack.red_pop());
+        }
+        
+        System.out.println("Blue stack:");
+        while (stack.blue_empty()==false) {
+            System.out.println(stack.blue_pop());
+        }
+    }
+}
