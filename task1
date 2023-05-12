@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class remove_dup {
+    public static char[] remove_duplicate(char[] arr) {
+        int x = arr.length;
+        char[] temp = new char[x];
+        int y = 0;
+        for (int i = 0; i < x; i++) {
+            boolean duplicate = false;
+            for (int h = 0; h < y; h++) {
+                if (arr[i] == temp[h]) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (duplicate==false) {
+                temp[y] = arr[i];
+                y++;
+            }
+        }
+        char[] output = new char[y];
+        for (int i = 0; i < y; i++) {
+            output[i] = temp[i];
+        }
+        return output;
+    }
+    
+    public static void main(String[] args) {
+        char[] input = {'j', 'a', 'n', 'a'};
+        char[] output = remove_duplicate(input);
+        System.out.println(Arrays.toString(output));
+    }
+}
