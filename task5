@@ -1,0 +1,97 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Tree {
+    private static class class_Node {
+        char val;
+        class_Node left;
+        class_Node right;
+
+        class_Node(char val) {
+            this.val = val;
+        }
+    }
+
+    private static Map<String, Integer> variables = new HashMap<>();
+    private static class_Node root;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter expression: ");
+        String exp = scanner.nextLine();
+        root = buildTree(exp);
+
+        while (true) {
+            System.out.print("Enter variable (x1-x3), or press enter to evaluate: ");
+            String var = scanner.nextLine();
+            if (var.isEmpty()) {
+                break;
+            }
+            if (!var.matches("^x[1-3]$")) {
+                System.out.println("Invalid variable name. Please enter a variable in the format x1-x3.");
+                continue;
+            }
+            System.out.print("Enter value: ");
+            int value = scanner.nextInt();
+            variables.put(var, value);
+            scanner.nextLine();  // Consume newline
+            System.out.printf("Added variable %s with value %d%n", var, value);
+            System.out.println("Current variables: " + variables);
+        }
+
+        int result = evaluate(root);
+        System.out.printf("Value of expression: %d%n", result);
+    }
+
+    private static class_Node buildTree(String exp) {
+        Stack<class_Node> stack = new Stack<>();
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+            if (Character.isDigit(c) || Character.isLetter(c)) {
+                class_Node class_Node = new class_Node(c);
+                stack.push(class_Node);
+            } else if (c == '+' || c == '-' || c == '*' || c == '/') {
+                class_Node class_Node = new class_Node(c);
+                class_Node right = stack.pop();
+                class_Node left = stack.pop();
+                class_Node.left = left;
+                class_Node.right = right;
+                stack.push(class_Node);
+            }
+        }
+        return stack.pop();
+    }
+
+    private static int evaluate(class_Node root) {
+        if (root == null) {
+            return 0;
+        }
+        if (Character.isDigit(root.val)) {
+            return root.val - '0';
+        }
+        if (Character.isLetter(root.val)) {
+            String var = "x" + (root.val - 'a' + 1);
+            if (variables.containsKey(var)) {
+                return variables.get(var);
+            } else {
+                throw new IllegalArgumentException("Undefined variable: " + var);
+            }
+        }
+        int left = evaluate(root.left);
+        int right = evaluate(root.right);
+        switch (root.val) {
+            case '+':
+                return left + right;
+            case '-':
+                return left - right;
+            case '*':
+                return left * right;
+            case '/':
+                return left / right;
+            default:
+                throw new IllegalArgumentException("Invalid operator: " + root.val);
+        }
+    }
+}
